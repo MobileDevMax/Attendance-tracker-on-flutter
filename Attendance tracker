@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(AttendanceApp());
+}
+
+class AttendanceApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Attendance Tracker',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: AttendanceScreen(),
+    );
+  }
+}
+
+class AttendanceScreen extends StatefulWidget {
+  @override
+  _AttendanceScreenState createState() => _AttendanceScreenState();
+}
+
+class _AttendanceScreenState extends State<AttendanceScreen> {
+  final List<Map<String, dynamic>> students = [
+    {'id': '1', 'name': 'Alice', 'attendance': List<bool>.filled(30, false)},
+    {'id': '2', 'name': 'Bob', 'attendance': List<bool>.filled(30, false)},
+    {'id': '3', 'name': 'Charlie', 'attendance': List<bool>.filled(30, false)},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Class Attendance')),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(width: 100.0), 
+                for (int day = 1; day <= 30; day++)
+                  Container(
+                    width: 40.0,
+                    alignment: Alignment.center,
+                    child: Text(day.toString()),
+                  ),
+              ],
+            ),
+            Column(
+              children: students.map((student) {
+                return Row(
+                  children: [
+                    Container(
+                      width: 100.0,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(student['name']),
+                    ),
+                    for (int day = 0; day < 30; day++)
+                      Container(
+                        width: 40.0,
+                        child: Checkbox(
+                          value: student['attendance'][day],
+                          onChanged: (bool? value) {
+                            setState(() {
+                              student['attendance'][day] = value ?? false;
+                            });
+                          },
+                        ),
+                      ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
